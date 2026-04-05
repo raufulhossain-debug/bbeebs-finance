@@ -2,6 +2,7 @@ export interface Expense {
   name: string
   amount: number
   type: 'Non-Negotiable' | 'Negotiable'
+  frequency?: 'monthly' | 'quarterly' | 'yearly'
 }
 
 export interface Debt {

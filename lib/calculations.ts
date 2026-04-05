@@ -3,8 +3,14 @@ import { FinancialData } from './types'
 export const calcTotalIncome = (d: FinancialData) =>
   d.income.bbs + d.income.beebs
 
+export const toMonthly = (e: { amount: number; frequency?: string }) => {
+  if (e.frequency === 'quarterly') return e.amount / 3
+  if (e.frequency === 'yearly') return e.amount / 12
+  return e.amount
+}
+
 export const calcTotalExpenses = (d: FinancialData) =>
-  Object.values(d.monthly_expenses).flat().reduce((sum, e) => sum + e.amount, 0)
+  Object.values(d.monthly_expenses).flat().reduce((sum, e) => sum + toMonthly(e), 0)
 
 export const calcTotalDebt = (d: FinancialData) =>
   d.credit_cards.reduce((sum, c) => sum + c.balance, 0)
