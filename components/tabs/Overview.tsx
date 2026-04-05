@@ -123,3 +123,6 @@ export default function Overview({ data }: { data: FinancialData }) {
     </div>
   )
 }
+
+// re-export so Overview page can show inline suggestions preview
+export { default as OverviewSuggestionsHint } from '../tabs/Suggestions'

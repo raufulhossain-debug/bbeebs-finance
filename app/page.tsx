@@ -17,6 +17,7 @@ import Retirement from '@/components/tabs/Retirement'
 import Investments from '@/components/tabs/Investments'
 import FIRE from '@/components/tabs/FIRE'
 import History from '@/components/tabs/History'
+import Suggestions from '@/components/tabs/Suggestions'
 import WhatIf from '@/components/tabs/WhatIf'
 
 const TABS = [
@@ -31,6 +32,7 @@ const TABS = [
   { id: 'whatif', label: 'What-If', dot: '#4f8ef7' },
   { id: 'fire', label: 'FIRE', dot: '#f05252' },
   { id: 'history', label: 'History', dot: '#8b8f99' },
+  { id: 'suggest', label: '✦ AI Suggestions', dot: '#9d7af5' },
 ]
 
 export default function App() {
@@ -176,6 +178,7 @@ export default function App() {
             {tab === 'whatif'       && <WhatIf data={data} />}
             {tab === 'fire'         && <FIRE data={data} />}
             {tab === 'history'      && <History />}
+            {tab === 'suggest'     && <Suggestions data={data} update={update} />}
           </div>
         </div>
       </div>
