@@ -1,11 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const secretKey = process.env.SUPABASE_SECRET_KEY!
+// Lazy factory — only called at runtime, not at build time
+export const supabaseAdmin = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !key) throw new Error('Supabase env vars missing')
+  return createClient(url, key)
+}
 
-// Client-side client (uses publishable/anon key)
-export const supabase = createClient(url, anonKey)
-
-// Server-side client (uses secret key — only used in API routes)
-export const supabaseAdmin = () => createClient(url, secretKey || anonKey)
+export const supabase = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !key) throw new Error('Supabase env vars missing')
+  return createClient(url, key)
+}

@@ -10,10 +10,7 @@ export async function GET() {
       .select('value')
       .eq('key', 'main')
       .single()
-
-    if (error || !data) {
-      return NextResponse.json(DEFAULT_DATA)
-    }
+    if (error || !data) return NextResponse.json(DEFAULT_DATA)
     return NextResponse.json(data.value)
   } catch {
     return NextResponse.json(DEFAULT_DATA)
@@ -24,14 +21,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
     const sb = supabaseAdmin()
-
-    const { error } = await sb
-      .from('financial_data')
-      .upsert({ key: 'main', value: body, updated_at: new Date().toISOString() })
-
-    if (error) throw error
-
-    // Save net worth snapshot
+    await sb.from('financial_data').upsert({ key: 'main', value: body, updated_at: new Date().toISOString() })
     const { calcNetWorth, calcTotalSavings, calcTotalRetirement, calcPortfolioValue, calcTotalDebt, calcTotalIncome, calcSavingsRate } = await import('@/lib/calculations')
     await sb.from('net_worth_history').upsert({
       snapshot_date: new Date().toISOString().split('T')[0],
@@ -43,7 +33,6 @@ export async function POST(req: Request) {
       monthly_income: calcTotalIncome(body),
       savings_rate: calcSavingsRate(body),
     }, { onConflict: 'snapshot_date' })
-
     return NextResponse.json({ ok: true })
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 })
