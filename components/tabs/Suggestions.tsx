@@ -53,11 +53,19 @@ function applyAction(data: FinancialData, action: Action): { data: FinancialData
   }
 
   if (action.type === 'update_retirement') {
-    const who = (action.owner || 'beebs') as 'bbs' | 'beebs'
-    if (d.retirement[who]) {
-      const old = (d.retirement[who] as any)[action.field]
-      ;(d.retirement[who] as any)[action.field] = action.suggested_value
-      return { data: d, applied: true, detail: `${who} retirement ${action.field}: $${old} → $${action.suggested_value}` }
+    // Find by owner field or by matching account_type name
+    let who = (action.owner || '') as 'bbs' | 'beebs' | ''
+    if (!who || (who !== 'bbs' && who !== 'beebs')) {
+      // Try to match by account_type
+      if (d.retirement.bbs.account_type?.toLowerCase() === action.target?.toLowerCase()) who = 'bbs'
+      else if (d.retirement.beebs.account_type?.toLowerCase() === action.target?.toLowerCase()) who = 'beebs'
+      else who = 'beebs' // default
+    }
+    const retAcc = d.retirement[who as 'bbs' | 'beebs']
+    if (retAcc) {
+      const oldVal = (retAcc as any)[action.field]
+      ;(retAcc as any)[action.field] = action.suggested_value
+      return { data: d, applied: true, detail: `${who} ${retAcc.account_type} ${action.field}: $${oldVal} → $${action.suggested_value}` }
     }
   }
 
