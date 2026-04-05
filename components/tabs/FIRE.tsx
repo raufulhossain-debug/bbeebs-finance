@@ -15,9 +15,9 @@ const RATES = [
 ]
 
 export default function FIRE({ data }: { data: FinancialData }) {
-  const [annualExp, setAnnualExp] = useState(calcTotalExpenses(data) * 12)
+  const [annualExp, setAnnualExp] = useState(Math.round(calcTotalExpenses(data) * 12 * 100) / 100)
   const [currentSav, setCurrentSav] = useState(calcTotalSavings(data) + calcTotalRetirement(data) + calcPortfolioValue(data))
-  const [annualSav, setAnnualSav] = useState(Math.max(calcMonthlyLeftover(data) * 12, 0))
+  const [annualSav, setAnnualSav] = useState(Math.round(Math.max(calcMonthlyLeftover(data) * 12, 0) * 100) / 100)
   const [retRate, setRetRate] = useState(7)
 
   const fireN = fireNumber(annualExp, 0.04)
